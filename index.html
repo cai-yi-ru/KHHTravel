@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+    integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+  <script src="https://cdn.staticfile.org/axios/0.18.0/axios.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
+
+  <style>
+    .bg-main {
+      background-image: url('https://khh.travel/image/19684/original');
+      width: auto;
+      height: 450px;
+      background-size: cover;
+      background-position: 0px center;
+    }
+
+    .mt-auto-device {
+      margin-top: auto;
+    }
+
+    .card-hotArea {
+      position: relative;
+      top: -3rem;
+      box-shadow: 0px 0px 8px rgba(0, 0, 0, .5);
+      border-radius: 3rem;
+    }
+
+    .box-shadow {
+      box-shadow: 0 3px 5px rgba(0, 0, 0, .16);
+      transition: box-shadow .3;
+    }
+
+    .box-shadow:hover {
+      box-shadow: 0 4px 10px rgba(0, 0, 0, .36);
+
+    }
+    @media (min-width: 576px) { 
+        .title-size{
+            font-size: 5rem;
+        }
+     }
+    
+    
+  </style>
+
+  <title>高雄夯旅遊</title>
+
+
+
+</head>
+
+<body>
+  <section id="travel">
+    <div class="container-fluid p-5 bg-main">
+      <div class="row justify-content-center">
+        <div class="col-12 col-sm-8 text-center text-shadow">
+          <h1 class="text-light py-5 title-size ">高雄夯旅遊</h1>
+          <p class="text-light display-5  m-1">豐富的高雄旅遊特輯，匯集主題式遊覽攻略、蒐羅在地必嚐美食，無論你是初訪高雄，或想來趟深度之旅，都能在這裡找到適合旅遊方式</p>
+
+          <form>
+
+            <div class="form-group col-12 mt-5">
+              <select id="inputState" class="form-control" v-model="currentLocation">
+                <option disabled value="" selected>請選擇地區</option>
+                <option value="">---全部---</option>
+                <option v-for="item in locations" :value="item">{{item}}</option>
+              </select>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-10 col-md-8 pt-2 bg-light card-hotArea text-center d-none d-sm-block">
+          <p class="text-black-50 my-2 h2">∞ 高雄夯景點 ∞</p>
+          <div class="hotBtn ">
+            <button type="button" value="全區" class="mx-2 mb-3 btn btn-info rounded-pill" @click="currentLocation=''"> 全區 </button>
+            <button type="button" value="旗山區" class="mx-2 mb-3 btn btn-info rounded-pill" @click="currentLocation='旗山區'"> 旗山區
+            </button>
+            <button type="button" value="三民區" class="mx-2 mb-3 btn btn-info rounded-pill" @click="currentLocation='三民區'"> 三民區
+            </button>
+            <button type="button" value="鳳山區" class="mx-2 mb-3 btn btn-info rounded-pill" @click="currentLocation='鳳山區'"> 鳳山區
+            </button>
+            <button type="button" value="大樹區" class="mx-2 mb-3 btn btn-info rounded-pill" @click="currentLocation='大樹區'"> 大樹區
+            </button>
+          </div>          
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+
+
+    <div class="container">
+      <div class="row ">
+        <h3 class="areaTitle col text-info text-center mb-4 " v-if="currentLocation=='' ">全部景點</h3>
+        <h3 class="areaTitle col text-info text-center mb-4 " v-else="currentLocation!=='' ">{{currentLocation}}景點</h3>
+      </div>
+
+      <div class="row mt-4">
+        <div class="col-md-4 mb-4" v-for="item in filterData[currentPage]" >
+          <div class="card border-0 h-100 box-shadow">
+            <div style="height: 250px; background-size: cover; background-position: center"
+              :style="{backgroundImage: `url(${item.Picture1})`}">
+            </div>
+            <div class="card-body">
+              <span class="badge badge-secondary float-right ml-2">{{item.Zone}}</span>
+              <h5 class="card-title">
+               {{item.Name}}
+ 
+                
+              </h5>
+              
+              <ul class="list-unstyled mb-0">
+
+                <li class="d-flex" v-if="!item.Ticketinfo">
+                  <div class="text-center" style="width: 30px" >
+                    <i class="fas fa-tags text-info"></i>
+                  </div>
+                  FREE</li>
+                <li class="d-flex">
+                  <div class="text-center" style="width: 30px">
+                    <i class="fas fa-clock text-primary"></i>
+                  </div>
+                  {{item.Opentime}}</li>
+                <li class="d-flex">
+                  <div class="text-center" style="width: 30px">
+                    <i class="fas fa-map-marker text-warning"></i>
+                  </div>
+                  {{item.Add}}</li>
+                <li class="d-flex">
+                  <div class="text-center" style="width: 30px">
+                    <i class="fas fa-mobile-alt text-info"></i>
+                  </div>
+                  {{item.Tel}}</li>                   
+              </ul>
+
+
+
+
+
+
+            </div>
+            <div class="card-footer d-flex justify-content-center">
+              <button type="button" class="btn btn-outline-secondary btn-sm" @click="getAttraction(item)">
+                查看更多
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <nav class="my-5" aria-label="Page navigation example">
+        <ul class="pagination justify-content-center"> 
+
+
+
+          <li class="page-item" :class="{ active:currentPage === 1 }">
+            <a class="page-link" href="#" @click.prevent="currentPage= 0">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>        
+          <li class="page-item" :class="{active: currentPage === page -1}" v-for="page in filterData.length" >
+            <a class="page-link" href="#" @click.prevent="currentPage= page -1">{{page}}</a></li>
+            <li class="page-item" :class="{ active: currentPage  === filterData.length }">
+              <a class="page-link" href="#" @click.prevent="currentPage= filterData.length-1">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+        </ul>
+      </nav>
+    </div>
+
+
+
+
+
+    <div class="modal fade" id="productModal" tabindex="-1" role="dialog"  aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document" >
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">{{ temAttraction.Name }}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body ">
+            <img :src="temAttraction.Picture1" class="img-fluid mx-auto d-block" alt="">
+            <blockquote class="blockquote mt-3">
+              <small class="mb-3 "> 簡介：<br>{{ temAttraction.Toldescribe }}</small>
+           
+              <div class="d-flex mt-3" v-if="temAttraction.Ticketinfo">
+                <div class="text-center" style="width: 40px" >
+                  <i class="fas fa-dollar-sign   text-warning m-2"></i>
+                </div>
+                {{temAttraction.Ticketinfo}}</div>        
+                <div class="d-flex mt-3" v-if="!temAttraction.Ticketinfo">
+                  <div class="text-center" style="width: 30px" >
+                    <i class="fas fa-tags text-info"></i>
+                  </div>
+                  FREE</div>                  
+                <div class="d-flex mt-3">
+                  <div class="text-center" style="width: 30px">
+                    <i class="fas fa-clock text-primary"></i>
+                  </div>
+                  {{temAttraction.Opentime}}</div>
+                <div class="d-flex mt-3">
+                  <div class="text-center" style="width: 30px">
+                    <i class="fas fa-map-marker text-warning"></i>
+                  </div>
+                  {{temAttraction.Add}}</div>
+                <div class="d-flex mt-3">
+                  <div class="text-center" style="width: 30px">
+                    <i class="fas fa-mobile-alt text-info"></i>
+                  </div>
+                  {{temAttraction.Tel}}</div>                   
+              
+
+
+
+
+
+              <footer class="blockquote-footer text-right">{{ temAttraction.Name}}</footer>
+            </blockquote>
+           
+            
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    </div>
+
+  </section>
+  <div class="footer bg-dark">
+    <div class="wrap text-white py-5">
+      <p class="text-center font-family ">高雄旅遊網</p>
+      <p class="text-center font-family ">資料來源:高雄市政府</p>
+      
+    </div>
+  </div>
+  <script src="khTravel.js"></script>
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+    integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+    integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>
